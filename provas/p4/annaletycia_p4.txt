@@ -1,0 +1,122 @@
+
+
+1) Qual o motivo de utilizar um vetor de acesso circular na implementação de uma fila estática?
+
+Em uma fila sequencia estática haverá um ponteiro ou índice apontando para o início, chamado de front, e outro ponteiro ou índice apontando para a próxima posição 
+disponível da fila, chamado rear. Entretanto, sempre que um elemento for inserido, o "rear" irá avançar para a próxima posição e o mesmo acontece com o front quando um
+elemento for removido. Ou seja, em algum momento a lista ficará sem espaço para alocar novos valores, mesmo ela ainda não estando cheia, por isso que o uso do vetor de 
+acesso circular é ideal para esse caso, visto que ele garante que quando o rear ou o front chegarem no último elemento, eles voltarão para o primeiro, acessando os espaços 
+que se tornaram lixo de memória depois de alguma remoção e utilizando todo o espaço do vetor.
+
+2) Uma das utilidades das listas circulares dinâmicas é a possibilidade de percorrer todos os elementos por diversas vezes em um loop. 
+Modifique o TAD para incluir uma função que retornará sempre o próximo elemento. Por exemplo, se a lista não foi percorrida ainda, o próximo 
+elemento é a cabeça. Depois, ao chamar a função novamente, será devolvido o segundo elemento, e assim sucessivamente.
+
+(a) mostrar como fica a estrutura do TAD
+
+typedef struct CircNode CircNode;
+
+struct CircNode{
+    CircNode *next;
+    struct aluno data;
+};
+
+struct CircList{
+    CircNode *end;
+    int size;
+    CircNode *prox;
+};
+
+(b) mostrar a função que retorna o próximo elemento
+*Não é necessário mostrar as outras funções afetadas pela modificação proposta
+
+int circlist_prox(CircList *clist, struct aluno *al)
+{
+    if(clist == NULL)
+        return INVALID_NULL_POINTER;
+
+    *al = clist->prox->data;
+     clist->prox = clist->prox->next;
+
+    return SUCCESS;
+}
+
+3)
+Crie uma função que faz a junção de duas strings. A função deve ter como entrada as duas strings e a string resultante da junção. 
+A alocação de espaço necessário para a string concatenada deve ser feita dentro da função. 
+A função deve retornar um valor inteiro: (0 - zero) se a junção ocorreu de forma correta; (-1) em caso de erro. 
+Mostre o uso da função no programa principal. Não é permitido criar novos tipos de dados para a solução do exercício (ou seja, sem uso de structs).
+
+
+Digite a string 1: Oi,
+Digite a string 2: Como vai?
+
+Texto concatenado: Oi, Como vai?
+
+Função concatena:
+
+int concatena(char *string1, char *string2, char *concat)
+{
+    if(string1 == NULL || string2 == NULL)
+        return -1;
+    
+    concat = malloc(strlen((string1) + strlen(string2)) * sizeof(char));
+
+    strcpy(concat,string1);
+    strcat(concat,string2);
+
+    return 0;
+}
+
+
+No programa principal:
+
+int main(){
+
+    char s1[100];
+    char s2[100];
+    char *c;
+
+    printf("Digite a string 1: ");
+    fgets(s1, 100, stdin);
+    printf("Digite a string 2: ");
+    fgets(s2, 100, stdin);
+
+    if(concatena(s1,s2,c) != 0)
+        printf("Erro na concatenacao!\n");
+
+    printf("Texto concatenado: %s", c);
+
+
+    return 0;
+
+}
+
+4)Mostre como uma pilha pode ser usada para resolver a expressão matemática abaixo
+
+Cada número e operador é lido em um passo. Para cada passo, mostre o estado da pilha 
+Exemplo de como mostrar a pilha 
+2 2 <topo  // o número 2 está no topo
+2 3 4 <topo // o número 4 está no topo
+
+Expressão: 
+
+4 -1 6 - * 5 +
+
+push(4)      // insere 4 na pilha
+4 <topo      // o número 4 está no topo
+push(-1)     // insere -1 na pilha
+4 -1<topo    // o número -1 está no topo
+push(6)      // insere 6 na pilha
+4 -1 6<topo  // o número 6 está no topo
+operador(-)
+push(pop(-1) - pop(6))  //insere -7 na pilha
+4 -7        // o número -7 está no topo
+operador(*)
+push(pop(4) * pop(-7))  //insere -28 na pilha
+-28     // o número -28 está no topo
+push(5)
+-28 5<topo   // o número 5 está no topo
+operador(+)
+push(pop(-28) + pop(5)) //insere -23 na pilha
+-23<topo  // o número -23 está no topo
